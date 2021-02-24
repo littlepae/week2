@@ -281,7 +281,7 @@ void ButtonMatrixUptade()
 			GPIO_PinState Pinstate = HAL_GPIO_ReadPin(ButtonamtrixPort[i], ButtonMatrixPin[i]);
 			if(Pinstate == GPIO_PIN_RESET) //Button press
 			{
-				Button |= (uint16_t)1 << (i+ ButtonMatrixRow * 4);
+				Button |= (uint16_t) 1 << (i+ ButtonMatrixRow * 4);
 				switch(Button)
 				{
 					case 0b1000000000000: //0
@@ -312,9 +312,9 @@ void ButtonMatrixUptade()
 //						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
 						strcat(Input,"6");
 						break;
-//					case 0b1000:
-//						strcpy(Input,"");
-//						break;
+					case 0b1000:
+						strcpy(Input,"");
+						break;
 					default:
 //						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
 						break;
