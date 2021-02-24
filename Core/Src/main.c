@@ -101,7 +101,7 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-
+	  ButtonMatrixUptade();
   }
   /* USER CODE END 3 */
 }
@@ -265,6 +265,11 @@ uint16_t ButtonMatrixPin[8] = {GPIO_PIN_10,GPIO_PIN_3,GPIO_PIN_5,GPIO_PIN_4,GPIO
 
 uint8_t ButtonMatrixRow = 0;
 
+char Answer[12] = "62340500051";
+char Input[12] = "";
+
+uint16_t Button = 0;
+
 void ButtonMatrixUptade()
 {
 	if(HAL_GetTick() - ButtonMatrixTimestamp >= 100)
@@ -274,8 +279,61 @@ void ButtonMatrixUptade()
 		for(i=0;i<4;++i)
 		{
 			GPIO_PinState Pinstate = HAL_GPIO_ReadPin(ButtonamtrixPort[i], ButtonMatrixPin[i]);
-			if(Pinstate == GPIO_PIN_RESET)
+			if(Pinstate == GPIO_PIN_RESET) //Button press
 			{
+				Button |= (uint16_t)1 << (i+ ButtonMatrixRow * 4);
+				switch(Button)
+				{
+					case 0b1000000000000: //0
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+						strcat(Input,"0");
+						break;
+					case 0b100000000: //1
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+						strcat(Input,"1");
+						break;
+					case 0b1000000000: //2
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+						strcat(Input,"2");
+						break;
+					case 0b10000000000: //3
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+						strcat(Input,"3");
+						break;
+					case 0b10000: //4
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+						strcat(Input,"4");
+						break;
+					case 0b100000: //5
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+						strcat(Input,"5");
+						break;
+					case 0b1000000: //6
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+						strcat(Input,"6");
+						break;
+//					case 0b1000:
+//						strcpy(Input,"");
+//						break;
+					default:
+//						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+						break;
+				}
+				if(Button == 0b1000000000000000) //'OK'
+				{
+//					HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+					if(strcmp(Input,Answer) == 0)
+					{
+						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 1);
+						strcpy(Input,"");
+					}
+					else
+					{
+						HAL_GPIO_WritePin(GPIOA, GPIO_PIN_5, 0);
+						strcpy(Input,"");
+					}
+				}
+				Button = 0b0;
 				ButtonMatrixState |= (uint16_t)0x1 <<(i + ButtonMatrixRow * 4);
 			}
 			else
